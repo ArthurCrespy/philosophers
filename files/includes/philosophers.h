@@ -17,7 +17,7 @@
 # include <stdlib.h>
 # include <pthread.h>
 # include <unistd.h>
-#include <sys/time.h>
+# include <sys/time.h>
 
 typedef struct timeval t_time;
 
@@ -25,7 +25,7 @@ typedef struct s_philo
 {
 	int				id;
 	int				fork;
-	int				eat_last;
+	int			    eat_last;
 	int				eat_count;
 	pthread_t		thread;
 	struct s_philo	*next;
@@ -33,6 +33,7 @@ typedef struct s_philo
 
 typedef struct s_data
 {
+	int             id_tmp;
 	int				nb_eat;
 	int				nb_philo;
 	int 			all_alive;
