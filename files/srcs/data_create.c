@@ -21,7 +21,9 @@ void create_node(t_data **data, int id)
 	if (!new)
 		return ;
 	new->id = id;
-	new->fork = (pthread_mutex_t)PTHREAD_MUTEX_INITIALIZER;
+	new->fork = 0;
+	new->eat_last = 0;
+	new->eat_count = 0;
 	if (!(*data)->philo)
 	{
 		new->next = new;
@@ -44,6 +46,7 @@ void create_table(t_data **data)
 	id = 0;
 	(*data)->all_alive = 0;
 	(*data)->philo = NULL;
+	(*data)->data_access = (pthread_mutex_t)PTHREAD_MUTEX_INITIALIZER;
 	while (id != (*data)->nb_philo)
 	{
 		create_node(&(*data), id + 1);
@@ -59,6 +62,7 @@ void create_table(t_data **data)
 		id++;
 	}
 	id = 0;
+	gettimeofday(&(*data)->time_start, NULL);
 	(*data)->all_alive = 1;
 	while (id != (*data)->nb_philo)
 	{

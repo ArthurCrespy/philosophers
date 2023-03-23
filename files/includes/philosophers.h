@@ -24,8 +24,9 @@ typedef struct timeval t_time;
 typedef struct s_philo
 {
 	int				id;
-	int				nb_eat;
-	int				last_eat;
+	int				fork;
+	int				eat_last;
+	int				eat_count;
 	pthread_t		thread;
 	pthread_mutex_t fork;
 	struct s_philo	*next;
@@ -33,7 +34,9 @@ typedef struct s_philo
 
 typedef struct s_data
 {
+	int				nb_eat;
 	int				nb_philo;
+	int 			all_alive;
 	int				time_to_die;
 	int				time_to_eat;
 	int				time_to_sleep;
@@ -43,6 +46,7 @@ typedef struct s_data
 	t_time			time_start;
 	t_time 			time_stop;
 	t_philo			*philo;
+	pthread_mutex_t data_access;
 }				t_data;
 
 /* ---------- ARGS --------- */
