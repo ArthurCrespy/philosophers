@@ -58,5 +58,5 @@ int	ft_timecode(t_data *data)
 
 	gettimeofday(&data->time, NULL);
 	diff = (data->time.tv_sec * 1000 + data->time.tv_usec / 1000) - (data->time_start.tv_sec * 1000 + data->time_start.tv_usec / 1000);
-	return (diff);
+	return ((int) diff);
 }
