@@ -14,9 +14,6 @@
 
 int data_parse(t_data *data, int argc, char **argv)
 {
-	int i;
-
-	i = 1;
 	if (argc < 5)
 		return (1);
 	data->nb_philo = atoi(argv[1]);
