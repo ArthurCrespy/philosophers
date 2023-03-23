@@ -18,11 +18,11 @@ int	args_check(int argc, char **argv)
 	int j;
 
 	i = 1;
-	j = 0;
 	if (argc < 5 || argc > 6)
 		return (1);
 	while (argv[i])
 	{
+		j = 0;
 		while (argv[i][j])
 		{
 			if (argv[i][j] < '0' || argv[i][j] > '9')
