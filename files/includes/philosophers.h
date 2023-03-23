@@ -28,7 +28,6 @@ typedef struct s_philo
 	int				eat_last;
 	int				eat_count;
 	pthread_t		thread;
-	pthread_mutex_t fork;
 	struct s_philo	*next;
 }				t_philo;
 
@@ -40,8 +39,6 @@ typedef struct s_data
 	int				time_to_die;
 	int				time_to_eat;
 	int				time_to_sleep;
-	int				nb_eat;
-	int 			all_alive;
 	t_time			time;
 	t_time			time_start;
 	t_time 			time_stop;
@@ -50,19 +47,22 @@ typedef struct s_data
 }				t_data;
 
 /* ---------- ARGS --------- */
-int	args_check(int argc, char **argv);
+int		args_check(int argc, char **argv);
 
 /* --------- CREATE -------- */
-void create_table(t_data **data);
+void	create_table(t_data **data);
 
 /* ---------- DATA --------- */
-int	data_parse(t_data *data, int argc, char **argv);
+int		data_parse(t_data *data, int argc, char **argv);
 
 /* ---------- PHILO --------- */
+void	eat(t_data *data);
+void	sleeep(t_data *data);
+void	think(t_data *data);
 void	*philosopher(void *arg);
 
 /* ---------- UTILS --------- */
-void go_to_philo(t_data **data, int id);
+void	go_to_philo(t_data **data, int id);
 void	free_table(t_data *data);
 void	print_table(t_data *data);
 int		ft_timecode(t_data *data);
