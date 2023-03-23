@@ -57,9 +57,9 @@ void	create_table(t_data **data);
 int		data_parse(t_data *data, int argc, char **argv);
 
 /* ---------- PHILO --------- */
-void	eat(t_data *data);
-void	sleeep(t_data *data);
-void	think(t_data *data);
+void	eat(t_data *data, int id);
+void	sleeep(t_data *data, int id);
+void	think(t_data *data, int id, int ttt);
 void	*philosopher(void *arg);
 
 /* ---------- UTILS --------- */
