@@ -47,19 +47,21 @@ void create_table(t_data **data)
 	(*data)->all_alive = 0;
 	(*data)->philo = NULL;
 	(*data)->data_access = (pthread_mutex_t)PTHREAD_MUTEX_INITIALIZER;
-	while (id != (*data)->nb_philo)
+	id = (*data)->nb_philo;
+	while (id != 0)
 	{
-		create_node(&(*data), id + 1);
-		id++;
+		create_node(&(*data), id);
+		id--;
 	}
-	go_to_philo(&(*data), 0);
-	id = 0;
-	while (id != (*data)->nb_philo)
+	go_to_philo(&(*data), (*data)->nb_philo);
+	id = (*data)->nb_philo;
+	while (id != 0)
 	{
+		(*data)->id_tmp = id;
 		pthread_create(&(*data)->philo->thread, NULL, philosopher, (void*)(*data));
 		(*data)->philo = (*data)->philo->next;
 		usleep(10000);
-		id++;
+		id--;
 	}
 	id = 0;
 	gettimeofday(&(*data)->time_start, NULL);
