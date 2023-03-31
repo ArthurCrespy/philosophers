@@ -26,10 +26,10 @@ int	main(int argc, char **argv)
 	data_parse(data, argc, argv);
 	gettimeofday(&data->time_start, NULL);
 	create_table(&data);
-	print_table(data);
+	table_print(data);
 	gettimeofday(&data->time_stop, NULL);
 	printf("%d >Machine      : Program took %d.%d seconds to run\n", ft_timecode(data), (int)(data->time_stop.tv_sec - data->time_start.tv_sec), (int)(data->time_stop.tv_usec - data->time_start.tv_usec));
 	usleep(10000);
-	free_table(data);
+	table_free(data);
 	return (0);
 }

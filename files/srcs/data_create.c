@@ -53,7 +53,7 @@ void create_table(t_data **data)
 		create_node(&(*data), id);
 		id--;
 	}
-	go_to_philo(&(*data), (*data)->nb_philo);
+	ft_goto_philo(&(*data), (*data)->nb_philo);
 	id = (*data)->nb_philo;
 	while (id != 0)
 	{
