@@ -57,15 +57,16 @@ void	create_table(t_data **data);
 int		data_parse(t_data *data, int argc, char **argv);
 
 /* ---------- PHILO --------- */
-void	eat(t_data *data, int id);
-void	sleeep(t_data *data, int id);
-void	think(t_data *data, int id, int ttt);
+int		philo_is_dead(t_data *data, int id);
+void	philo_eat(t_data *data, int id);
+void	philo_sleep(t_data *data, int id);
+void	philo_think(t_data *data, int id, int ttt);
 void	*philosopher(void *arg);
 
 /* ---------- UTILS --------- */
-void	go_to_philo(t_data **data, int id);
-void	free_table(t_data *data);
-void	print_table(t_data *data);
+void	table_free(t_data *data);
+void	table_print(t_data *data);
+void	ft_goto_philo(t_data **data, int id);
 int		ft_timecode(t_data *data);
-
+void	ft_wait(t_data *data, int id, int time);
 #endif
