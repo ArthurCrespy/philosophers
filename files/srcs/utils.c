@@ -54,19 +54,21 @@ void ft_goto_philo(t_data **data, int id)
 
 void	ft_wait(t_data *data, int id, int time)
 {
-	long double	diff;
+	//long double	diff;
 	t_time	time_start;
-	t_time	time_now;
+	//t_time	time_now;
 
 	gettimeofday(&time_start, NULL);
 	philo_is_dead(data, id);
-	while (1)
+/*	while (1)
 	{
 		gettimeofday(&time_now, NULL);
 		diff = (time_now.tv_sec * 1000 + time_now.tv_usec / 1000) - (time_start.tv_sec * 1000 + time_start.tv_usec / 1000);
 		if (diff >= time)
 			break ;
-	}   
+	} */
+	usleep(time);
+	//philo_is_dead(data, id);
 }
 
 int	ft_timecode(t_data *data)
