@@ -21,7 +21,7 @@ void create_node(t_data **data, int id)
 	if (!new)
 		return ;
 	new->id = id;
-	new->fork = 0;
+	new->fork_avail = 0;
 	new->eat_last = 0;
 	new->eat_count = 0;
 	if (!(*data)->philo)
@@ -58,8 +58,10 @@ void create_table(t_data **data)
 	while (id != 0)
 	{
 		(*data)->id_tmp = id;
+		//(*data)->philo->data = *data;
 		pthread_create(&(*data)->philo->thread, NULL, philosopher, (void*)(*data));
 		(*data)->philo = (*data)->philo->next;
+		//pthread_mutex_init(&(*data)->philo->fork_mutex, NULL);
 		usleep(10000);
 		id--;
 	}

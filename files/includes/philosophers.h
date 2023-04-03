@@ -24,10 +24,12 @@ typedef struct timeval t_time;
 typedef struct s_philo
 {
 	int				id;
-	int				fork;
+	//pthread_mutex_t fork_mutex;
+	int				fork_avail;
 	int			    eat_last;
 	int				eat_count;
 	pthread_t		thread;
+	//struct s_data	*data;
 	struct s_philo	*next;
 }				t_philo;
 

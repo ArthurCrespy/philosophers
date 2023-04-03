@@ -15,15 +15,15 @@
 int	philo_take_fork(t_data *data, int id)
 {
 	ft_goto_philo(&data, id);
-	if (data->philo->fork == 0)
+	if (data->philo->fork_avail == 0)
 	{
 		ft_goto_philo(&data, id - 1);
-		if (data->philo->fork == 0)
+		if (data->philo->fork_avail == 0)
 		{
-			data->philo->fork = 1;
+			data->philo->fork_avail = 1;
 			printf("%d %d has taken a fork\n", ft_timecode(data), id);
 			ft_goto_philo(&data, id);
-			data->philo->fork = 1;
+			data->philo->fork_avail = 1;
 			printf("%d %d has taken a fork\n", ft_timecode(data), id);
 			return (1);
 		}
@@ -35,9 +35,9 @@ int	philo_drop_fork(t_data *data, int id)
 {
 	pthread_mutex_lock(&data->data_access);
 	ft_goto_philo(&data, id);
-	data->philo->fork = 0;
+	data->philo->fork_avail = 0;
 	ft_goto_philo(&data, id - 1);
-	data->philo->fork = 0;
+	data->philo->fork_avail = 0;
 	pthread_mutex_unlock(&data->data_access);
 	return (0);
 }
@@ -60,8 +60,8 @@ void	philo_think(t_data *data, int id, int ttt)
 {
 	philo_is_dead(data, id);
 	printf("%d %d is thinking\n", ft_timecode(data), data->philo->id);
-	ft_wait(data, id, ttt * 1000);
-	philo_sleep(data, id);
+	ft_wait(data, id, ttt);
+	philo_eat(data, id);
 }
 
 void	philo_sleep(t_data *data, int id)
@@ -69,7 +69,7 @@ void	philo_sleep(t_data *data, int id)
 	philo_is_dead(data, id);
 	printf("%d %d is sleeping\n", ft_timecode(data), id);
 	ft_wait(data, id, data->time_to_sleep * 1000);
-	philo_eat(data, id);
+	philo_think(data, id, data->time_to_eat);
 }
 
 void	philo_eat(t_data *data, int id)
@@ -84,15 +84,15 @@ void	philo_eat(t_data *data, int id)
 		printf("%d %d is eating\n", data->philo->eat_last, id);
 		pthread_mutex_unlock(&data->data_access);
 		ft_wait(data, id, data->time_to_eat * 1000);
+		philo_drop_fork(data, id);
+		philo_sleep(data, id);
 	}
 	else
 	{
 		ft_goto_philo(&data, id);
 		pthread_mutex_unlock(&data->data_access);
-		philo_think(data, id, data->time_to_eat);
+		philo_think(data, id, data->time_to_eat * 1000);
 	}
-	philo_drop_fork(data, id);
-	philo_think(data, id, data->time_to_eat);
 }
 
 void	*philosopher(void *arg)
