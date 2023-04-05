@@ -20,42 +20,49 @@
 # include <sys/time.h>
 
 typedef struct timeval t_time;
+struct s_data;
 
 typedef struct s_philo
 {
 	int				id;
-	int				eat_count;
-	void			*data;
-	t_time			eat_last;
+	int				eat_nb;
+	struct s_data	*data;
+	long long			eat_last;
 	pthread_t		thread;
 	pthread_mutex_t	fork;
+	struct s_philo	*next;
 }					t_philo;
 
 typedef struct s_data
 {
-	int		philo_nb;
-	int		philo_alive;
-	int		time_to_die;
-	int		time_to_eat;
-	int		time_to_sleep;
-	int		eat_nb;
+	int			philo_nb;
+	int			philo_alive;
+	int			time_to_die;
+	int			time_to_eat;
+	int			time_to_sleep;
+	long long	time_start;
+	int			eat_nb;
 	t_philo *philo;
+	pthread_mutex_t	data_access;
 }               t_data;
 
 
 /* ---------- ARGS --------- */
-int	args_check(int argc, char **argv);
+int			args_check(int argc, char **argv);
 
 /* ---------- INIT --------- */
-int	data_init(t_data **data);
+int			data_init(t_data **data);
 
 /* ---------- DATA --------- */
-int	data_parse(t_data **data, int argc, char **argv);
+int			data_parse(t_data **data, int argc, char **argv);
 
 /* ---------- PHILO --------- */
-void	*philosopher(void *arg);
+void		*philosopher(void *arg);
 
 /* ---------- UTILS --------- */
-int	ft_atoi(const char *str);
+long long	ft_timestamp(void);
+void ft_smart_sleep(t_data *data, long long time);
+void ft_print_status(t_data *data, int id, char *status);
+int			ft_atoi(const char *str);
 
 #endif
