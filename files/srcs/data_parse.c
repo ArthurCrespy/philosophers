@@ -21,6 +21,6 @@ int	data_parse(t_data **data, int argc, char **argv)
 	if (argc == 6)
 		(*data)->eat_nb = ft_atoi(argv[5]);
 	else
-		(*data)->eat_nb = 0;
+		(*data)->eat_nb = -1;
 	return (0);
 }

@@ -12,7 +12,7 @@
 
 #include "../includes/philosophers.h"
 
-int	philo_take_fork(t_data *data, int id)
+/*int	philo_take_fork(t_data *data, int id)
 {
 	ft_goto_philo(&data, id);
 	if (data->philo->fork_avail == 0)
@@ -70,40 +70,56 @@ void	philo_sleep(t_data *data, int id)
 	printf("%d %d is sleeping\n", ft_timecode(data), id);
 	ft_wait(data, id, data->time_to_sleep * 1000);
 	philo_think(data, id, data->time_to_eat);
-}
+}*/
 
-void	philo_eat(t_data *data, int id)
+void	philo_eat(t_philo *philo)
 {
-	philo_is_dead(data, id);
+	t_data	*data;
+
+	data = (t_data*)philo->data;
 	pthread_mutex_lock(&data->data_access);
-	ft_goto_philo(&data, id);
-	if (philo_take_fork(data, id))
-	{
-		data->philo->eat_last = ft_timecode(data);
-		data->philo->eat_count++;
-		printf("%d %d is eating\n", data->philo->eat_last, id);
-		pthread_mutex_unlock(&data->data_access);
-		ft_wait(data, id, data->time_to_eat * 1000);
-		philo_drop_fork(data, id);
-		philo_sleep(data, id);
-	}
+	pthread_mutex_lock(&philo->fork);
+	ft_print_status(data, philo->id, "has taken a fork");
+	if (philo->id == 1)
+		pthread_mutex_lock(&data->philo[data->philo_nb - 1].fork);
 	else
-	{
-		ft_goto_philo(&data, id);
-		pthread_mutex_unlock(&data->data_access);
-		philo_think(data, id, data->time_to_eat * 1000);
-	}
+		pthread_mutex_lock(&data->philo[philo->id - 1].fork);
+	printf("%d philo_eat\n", philo->id);
+	ft_print_status(data, philo->id, "has taken a fork");
+	ft_print_status(data, philo->id, "is eating");
+	philo->eat_last = ft_timestamp();
+	pthread_mutex_unlock(&data->data_access);
+	ft_smart_sleep(data, data->time_to_eat * 1000);
+	pthread_mutex_lock(&data->data_access);
+	pthread_mutex_unlock(&philo->fork);
+	if (philo->id == 1)
+		pthread_mutex_unlock(&data->philo[data->philo_nb - 1].fork);
+	else
+		pthread_mutex_unlock(&data->philo[philo->id - 1].fork);
+
 }
 
 void	*philosopher(void *arg)
 {
-	int     id;
+	t_philo *philo;
 	t_data	*data;
 
-	data = (t_data*)arg;
-	id = (*data).id;
-	while (data->all_alive == 0)
-		data = (t_data*)arg;
-	philo_eat(data, id);
+	philo = (t_philo*)arg;
+	data = (t_data*)philo->data;
+	data->time_start = ft_timestamp();
+	ft_print_status(data, philo->id, "is alive");
+	if (philo->id % 2)
+		ft_smart_sleep(data, data->time_to_eat * 100);
+	while (data->philo_alive)
+	{
+		philo_eat(philo);
+		if (data->eat_nb >= 0 && philo->eat_nb >= data->eat_nb) {
+			break ;
+		}
+		ft_print_status(data, philo->id, "is born");
+		ft_print_status(data, philo->id, "is sleeping");
+		ft_smart_sleep(data, data->time_to_sleep * 1000);
+		ft_print_status(data, philo->id, "is thinking");
+	}
 	return (NULL);
 }
