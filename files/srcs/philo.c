@@ -6,7 +6,7 @@
 /*   By: acrespy <acrespy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 17:03:54 by acrespy           #+#    #+#             */
-/*   Updated: 2023/03/23 14:21:12 by arthur           ###   ########.fr       */
+/*   Updated: 2023/04/05 12:56:27 by acrespy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ void	*philosopher(void *arg)
 	t_data	*data;
 
 	data = (t_data*)arg;
-	id = (*data).id_tmp;
+	id = (*data).id;
 	while (data->all_alive == 0)
 		data = (t_data*)arg;
 	philo_eat(data, id);

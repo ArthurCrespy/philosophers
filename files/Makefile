@@ -15,11 +15,11 @@ NAME        := philo
 SRC_DIR     := srcs
 SRCS := \
 			args_check.c \
-			data_create.c \
+			data_init.c \
 			data_parse.c \
+			ft_utils.c \
 			main.c \
 			philo.c \
-			utils.c \
 
 SRCS := ${SRCS:%=${SRC_DIR}/%}
 
