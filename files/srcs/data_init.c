@@ -17,6 +17,8 @@ int	data_thread_init(t_data **data)
 	int	i;
 
 	i = 1;
+	if (pthread_create(&(*data)->philo_checker, NULL, &philo_checker, &(*data)))
+		return (1);
 	while (i < (*data)->philo_nb && i % 2)
 	{
 		if (pthread_create(&(*data)->philo[i].thread, NULL, &philosopher, &(*data)->philo[i]))
@@ -83,6 +85,7 @@ int	data_destroy(t_data **data)
 		pthread_join((*data)->philo[i].thread, NULL);
 		i++;
 	}
+	pthread_join((*data)->philo_checker, NULL);
 	i = 0;
 	while (i < (*data)->philo_nb)
 	{
