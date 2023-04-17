@@ -6,7 +6,7 @@
 /*   By: acrespy <acrespy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/25 13:20:10 by acrespy           #+#    #+#             */
-/*   Updated: 2023/04/05 12:56:53 by acrespy          ###   ########.fr       */
+/*   Updated: 2023/04/14 17:42:48 by acrespy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,31 +20,46 @@ long long	ft_timestamp(void)
 	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
 }
 
+void	ft_wait_start(t_data *data)
+{
+	long long int	start;
+
+	start = data->time_start;
+	while (ft_timestamp() < start)
+		usleep(100);
+}
+
+void	ft_print_status(t_data *data, int id, char *status)
+{
+	long long	time;
+
+	time = ft_timestamp();
+	usleep(100);
+	pthread_mutex_lock(&data->data_access);
+	printf("%lld %d %s\n", time - data->time_start, id, status);
+	pthread_mutex_unlock(&data->data_access);
+}
+
 void	ft_smart_sleep(t_data *data, long long time)
 {
-	long long i;
+	long long	i;
 
 	i = ft_timestamp();
+	if (!data)
+	{
+		while (1)
+		{
+			if ((ft_timestamp()) - i >= time)
+				break ;
+			usleep(10);
+		}
+	}
 	while (data->philo_alive)
 	{
-		if ((i - ft_timestamp()) >= time)
+		if ((ft_timestamp()) - i >= time)
 			break ;
-		usleep(20);
+		usleep(10);
 	}
-}
-
-void ft_print_status(t_data *data, int id, char *status)
-{
-	//pthread_mutex_lock(&data->data_access);
-	printf("%lld %d %s\n", ft_timestamp() - data->time_start, id, status);
-	//pthread_mutex_unlock(&data->data_access);
-}
-
-int	ft_isspace(char c)
-{
-	if ((c >= 9 && c <= 13) || c == 32)
-		return (1);
-	return (0);
 }
 
 int	ft_atoi(const char *str)
@@ -56,7 +71,7 @@ int	ft_atoi(const char *str)
 	i = 0;
 	sign = 1;
 	result = 0;
-	while (ft_isspace(str[i]))
+	while ((str[i] >= 9 && str[i] <= 13) || str[i] == ' ')
 		i++;
 	if (str[i] == '-' || str[i] == '+')
 	{
