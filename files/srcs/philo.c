@@ -48,6 +48,32 @@ void	philo_eat(t_philo *philo)
 	pthread_mutex_unlock(&philo->fork_left);
 }
 
+void	*philo_checker(void *arg)
+{
+	int         i;
+	t_data		*data;
+	t_philo		*philo;
+	long long	time;
+
+	i = 0;
+	data = (t_data *)arg;
+	philo = data->philo;
+	ft_wait_start(data);
+	while (1)
+	{
+		time = ft_timestamp();
+		if (time - philo->eat_last > data->time_to_die)
+		{
+			ft_print_status(data, philo->id, "died");
+			data->philo_alive = 0;
+			break ;
+		}
+		if (data->philo_alive == 0)
+			break ;
+	}
+	return (NULL);
+}
+
 void	*philosopher(void *arg)
 {
 	t_philo	*philo;
