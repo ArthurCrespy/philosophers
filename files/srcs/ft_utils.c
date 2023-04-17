@@ -22,7 +22,7 @@ long long	ft_timestamp(void)
 
 void	ft_wait_start(t_data *data)
 {
-	long long int	start;
+	long long	start;
 
 	start = data->time_start;
 	while (ft_timestamp() < start)

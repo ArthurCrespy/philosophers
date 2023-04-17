@@ -12,7 +12,7 @@
 
 #include "../includes/philosophers.h"
 
-void    philo_sleep(t_philo *philo)
+void	philo_sleep(t_philo *philo)
 {
 	t_data	*data;
 
@@ -21,7 +21,7 @@ void    philo_sleep(t_philo *philo)
 	ft_smart_sleep(data, data->time_to_sleep);
 }
 
-void    philo_think(t_philo *philo)
+void	philo_think(t_philo *philo)
 {
 	t_data	*data;
 

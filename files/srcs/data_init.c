@@ -35,8 +35,8 @@ int	data_thread_init(t_data **data)
 
 int	data_init(t_data **data)
 {
-	int	i;
-	t_data *tmp;
+	int		i;
+	t_data	*tmp;
 
 	i = 0;
 	tmp = *data;
