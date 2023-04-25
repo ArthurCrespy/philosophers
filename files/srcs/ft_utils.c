@@ -6,7 +6,7 @@
 /*   By: acrespy <acrespy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/25 13:20:10 by acrespy           #+#    #+#             */
-/*   Updated: 2023/04/14 17:42:48 by acrespy          ###   ########.fr       */
+/*   Updated: 2023/04/24 14:43:15 by acrespy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,8 @@ void	ft_print_status(t_data *data, int id, char *status)
 	time = ft_timestamp();
 	usleep(100);
 	pthread_mutex_lock(&data->data_access);
-	printf("%lld %d %s\n", time - data->time_start, id, status);
+	if (data->philo_alive)
+		printf("%lld %d %s\n", time - data->time_start, id, status);
 	pthread_mutex_unlock(&data->data_access);
 }
 
@@ -54,10 +55,17 @@ void	ft_smart_sleep(t_data *data, long long time)
 			usleep(10);
 		}
 	}
-	while (data->philo_alive)
+	while (1)
 	{
 		if ((ft_timestamp()) - i >= time)
 			break ;
+		pthread_mutex_lock(&data->data_access);
+		if (!data->philo_alive)
+		{
+			pthread_mutex_unlock(&data->data_access);
+			return ;
+		}
+		pthread_mutex_unlock(&data->data_access);
 		usleep(10);
 	}
 }
