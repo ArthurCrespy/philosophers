@@ -31,7 +31,7 @@ typedef struct s_philo
 	long long		eat_last;
 	pthread_t		thread;
 	pthread_mutex_t	fork;
-	pthread_mutex_t	fork_left;
+	pthread_mutex_t	*fork_left;
 }					t_philo;
 
 typedef struct s_data

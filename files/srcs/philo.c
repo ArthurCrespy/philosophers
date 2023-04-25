@@ -39,7 +39,7 @@ void	philo_eat(t_philo *philo)
 	data = (t_data *)philo->data;
 	pthread_mutex_lock(&philo->fork);
 	ft_print_status(data, philo->id, "has taken a fork");
-	pthread_mutex_lock(&philo->fork_left);
+	pthread_mutex_lock(philo->fork_left);
 	ft_print_status(data, philo->id, "has taken a fork");
 	ft_print_status(data, philo->id, "is eating");
 	pthread_mutex_lock(&data->data_access);
@@ -48,7 +48,7 @@ void	philo_eat(t_philo *philo)
 	pthread_mutex_unlock(&data->data_access);
 	ft_smart_sleep(data, data->time_to_eat);
 	pthread_mutex_unlock(&philo->fork);
-	pthread_mutex_unlock(&philo->fork_left);
+	pthread_mutex_unlock(philo->fork_left);
 }
 
 void	*philo_checker(void *arg)

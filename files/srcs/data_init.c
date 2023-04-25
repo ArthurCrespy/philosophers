@@ -67,9 +67,11 @@ int	data_init(t_data **data)
 	i = 0;
 	while (i < (*data)->philo_nb)
 	{
-		(*data)->philo[i].fork_left = (*tmp).philo[(*tmp).philo[i].id_left].fork;
+		(*data)->philo[i].fork_left = &(*tmp).philo[(*tmp).philo[i].id_left].fork;
 		i++;
 	}
+	if ((*data)->philo_nb == 1)
+		(*data)->philo[i].fork_left = &(*data)->philo[i].fork;
 	(*data)->time_start = ft_timestamp() + 1000;
 	data_thread_init(data);
 	return (0);
