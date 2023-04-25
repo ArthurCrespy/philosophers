@@ -60,11 +60,12 @@ void	*philo_checker(void *arg)
 	i = 0;
 	data = (t_data *)arg;
 	ft_wait_start(data);
+	usleep(1);
 	while (data->philo_alive)
 	{
 		time = ft_timestamp();
 		pthread_mutex_lock(&data->data_access);
-		while (i != data->philo_nb && (*data).philo[i].eat_nb != 0)
+		while (i != data->philo_nb)
 		{
 			if (time - data->philo[i].eat_last >= data->time_to_die)
 			{
@@ -79,7 +80,7 @@ void	*philo_checker(void *arg)
 		pthread_mutex_unlock(&data->data_access);
 		if (i == data->philo_nb)
 			i = 0;
-		usleep(1000);
+		usleep(100);
 	}
 	return (NULL);
 }
@@ -93,7 +94,7 @@ void	*philosopher(void *arg)
 	data = (t_data *)philo->data;
 	ft_wait_start(data);
 	philo->eat_last = ft_timestamp();
-	if (philo->id % 2 == 0)
+	if (!(philo->id % 2))
 	{
 		philo_sleep(philo);
 		philo_think(philo);

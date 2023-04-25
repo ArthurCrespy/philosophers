@@ -6,7 +6,7 @@
 /*   By: acrespy <acrespy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 12:59:14 by acrespy           #+#    #+#             */
-/*   Updated: 2023/04/14 17:44:00 by acrespy          ###   ########.fr       */
+/*   Updated: 2023/04/24 14:40:39 by acrespy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,6 @@ int	data_thread_init(t_data **data)
 	int	i;
 
 	i = 1;
-	if (pthread_create(&(*data)->philo_checker, NULL, &philo_checker, &(*data)))
-		return (1);
 	while (i < (*data)->philo_nb && i % 2)
 	{
 		if (pthread_create(&(*data)->philo[i].thread, NULL, &philosopher, &(*data)->philo[i]))
@@ -32,6 +30,8 @@ int	data_thread_init(t_data **data)
 			return (1);
 		i += 2;
 	}
+	if (pthread_create(&(*data)->philo_checker, NULL, &philo_checker, (*data)))
+		return (1);
 	return (0);
 }
 
