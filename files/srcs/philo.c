@@ -42,10 +42,10 @@ void	philo_eat(t_philo *philo)
 	pthread_mutex_lock(philo->fork_left);
 	ft_print_status(data, philo->id, "has taken a fork");
 	ft_print_status(data, philo->id, "is eating");
-	pthread_mutex_lock(&data->data_access);
+	pthread_mutex_lock(&philo->data_access);
 	philo->eat_last = ft_timestamp();
 	philo->eat_nb++;
-	pthread_mutex_unlock(&data->data_access);
+	pthread_mutex_unlock(&philo->data_access);
 	ft_smart_sleep(data, data->time_to_eat);
 	pthread_mutex_unlock(&philo->fork);
 	pthread_mutex_unlock(philo->fork_left);
@@ -64,20 +64,18 @@ void	*philo_checker(void *arg)
 	while (data->philo_alive)
 	{
 		time = ft_timestamp();
-		pthread_mutex_lock(&data->data_access);
 		while (i != data->philo_nb)
 		{
+			pthread_mutex_lock(&data->philo[i].data_access);
 			if (time - data->philo[i].eat_last >= data->time_to_die)
 			{
-				pthread_mutex_unlock(&data->data_access);
 				ft_print_status(data, data->philo[i].id, "died");
-				pthread_mutex_lock(&data->data_access);
 				data->philo_alive = 0;
 				break ;
 			}
+			pthread_mutex_unlock(&data->philo[i].data_access);
 			i++;
 		}
-		pthread_mutex_unlock(&data->data_access);
 		if (i == data->philo_nb)
 			i = 0;
 		usleep(100);
