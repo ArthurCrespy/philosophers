@@ -27,11 +27,12 @@ typedef struct s_philo
 	int				id;
 	int				id_left;
 	int				eat_nb;
-	struct s_data	*data;
 	long long		eat_last;
+	struct s_data	*data;
 	pthread_t		thread;
 	pthread_mutex_t	fork;
 	pthread_mutex_t	*fork_left;
+	pthread_mutex_t data_access;
 }					t_philo;
 
 typedef struct s_data
