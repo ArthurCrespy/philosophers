@@ -38,41 +38,36 @@ int	data_thread_init(t_data **data)
 int	data_init(t_data **data)
 {
 	int		i;
-	t_data	*tmp;
 
 	i = 0;
-	tmp = *data;
 	(*data)->philo_alive = 1;
 	(*data)->philo = malloc(sizeof(t_philo) * (*data)->philo_nb);
 	if (!(*data)->philo)
 		return (1);
 	if (pthread_mutex_init(&(*data)->data_access, NULL))
 		return (1);
-	if (!(*data)->philo)
-		return (1);
 	while (i < (*data)->philo_nb)
 	{
 		(*data)->philo[i].id = i + 1;
+		(*data)->philo[i].eat_nb = 0;
+		(*data)->philo[i].data = *data;
 		if (i == 0)
 			(*data)->philo[i].id_left = (*data)->philo_nb - 1;
 		else
-			(*data)->philo[i].id_left = i;
-		(*data)->philo[i].eat_nb = 0;
-		(*data)->philo[i].data = *data;
+			(*data)->philo[i].id_left = i - 1;
 		if (pthread_mutex_init(&(*data)->philo[i].fork, NULL))
 			return (1);
-		usleep(10);
+		if (pthread_mutex_init(&(*data)->philo[i].data_access, NULL))
+			return (1);
 		i++;
 	}
 	i = 0;
 	while (i < (*data)->philo_nb)
 	{
-		(*data)->philo[i].fork_left = &(*tmp).philo[(*tmp).philo[i].id_left].fork;
+		(*data)->philo[i].fork_left = &(*data)->philo[(*data)->philo[i].id_left].fork;
 		i++;
 	}
-	if ((*data)->philo_nb == 1)
-		(*data)->philo[i].fork_left = &(*data)->philo[i].fork;
-	(*data)->time_start = ft_timestamp() + 1000;
+	(*data)->time_start = ft_timestamp() + 5000;
 	data_thread_init(data);
 	return (0);
 }
