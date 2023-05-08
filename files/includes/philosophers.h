@@ -32,7 +32,7 @@ typedef struct s_philo
 	pthread_t		thread;
 	pthread_mutex_t	fork;
 	pthread_mutex_t	*fork_left;
-	pthread_mutex_t data_access;
+	pthread_mutex_t	data_access;
 }					t_philo;
 
 typedef struct s_data
@@ -63,10 +63,14 @@ int			data_destroy(t_data **data);
 void		*philo_checker(void *arg);
 void		*philosopher(void *arg);
 
-/* ---------- UTILS --------- */
+/* ---------- TIME --------- */
 long long	ft_timestamp(void);
 void		ft_wait_start(t_data *data);
 void		ft_smart_sleep(t_data *data, long long time);
+
+/* ---------- UTILS --------- */
+void		ft_set_dead(t_data *data, int id);
+int			ft_check_alive(t_data *data);
 void		ft_print_status(t_data *data, int id, char *status);
 int			ft_atoi(const char *str);
 
