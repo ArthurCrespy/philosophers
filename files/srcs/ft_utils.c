@@ -12,21 +12,25 @@
 
 #include "../includes/philosophers.h"
 
-long long	ft_timestamp(void)
+void	ft_set_dead(t_data *data, int id)
 {
-	t_time	time;
-
-	gettimeofday(&time, NULL);
-	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
+	if (id >= 0)
+		ft_print_status(data, data->philo[id].id, "died");
+	pthread_mutex_lock(&data->data_access);
+	data->philo_alive = 0;
+	pthread_mutex_unlock(&data->data_access);
 }
 
-void	ft_wait_start(t_data *data)
+int	ft_check_alive(t_data *data)
 {
-	long long	start;
-
-	start = data->time_start;
-	while (ft_timestamp() < start)
-		usleep(100);
+	pthread_mutex_lock(&data->data_access);
+	if (!data->philo_alive)
+	{
+		pthread_mutex_unlock(&data->data_access);
+		return (0);
+	}
+	pthread_mutex_unlock(&data->data_access);
+	return (1);
 }
 
 void	ft_print_status(t_data *data, int id, char *status)
