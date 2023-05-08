@@ -17,6 +17,7 @@ SRCS := \
 			args_check.c \
 			data_init.c \
 			data_parse.c \
+			ft_time.c \
 			ft_utils.c \
 			main.c \
 			philo.c \
