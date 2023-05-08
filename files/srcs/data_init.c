@@ -17,21 +17,40 @@ int	data_thread_init(t_data **data)
 	int	i;
 
 	i = 1;
+	(*data)->philo_alive = 1;
+	(*data)->time_start = ft_timestamp() + ((*data)->philo_nb * 100);
 	while (i < (*data)->philo_nb && i % 2)
 	{
-		if (pthread_create(&(*data)->philo[i].thread, NULL, &philosopher, &(*data)->philo[i]))
+		if (pthread_create(&(*data)->philo[i].thread, NULL, &philosopher,
+				&(*data)->philo[i]))
 			return (1);
 		i += 2;
 	}
 	i = 0;
 	while (i < (*data)->philo_nb && !(i % 2))
 	{
-		if (pthread_create(&(*data)->philo[i].thread, NULL, &philosopher, &(*data)->philo[i]))
+		if (pthread_create(&(*data)->philo[i].thread, NULL, &philosopher,
+				&(*data)->philo[i]))
 			return (1);
 		i += 2;
 	}
-	if (pthread_create(&(*data)->philo_checker, NULL, &philo_checker, (*data)))
+	if (pthread_create(&(*data)->philo_checker, NULL, &philo_checker,
+			(*data)))
 		return (1);
+	return (0);
+}
+
+int	data_init_fork(t_data **data)
+{
+	int	i;
+
+	i = 0;
+	while (i < (*data)->philo_nb)
+	{
+		(*data)->philo[i].fork_left = &(*data)->philo[(*data)->philo[i].id_left]
+			.fork;
+		i++;
+	}
 	return (0);
 }
 
@@ -40,7 +59,6 @@ int	data_init(t_data **data)
 	int		i;
 
 	i = 0;
-	(*data)->philo_alive = 1;
 	(*data)->philo = malloc(sizeof(t_philo) * (*data)->philo_nb);
 	if (!(*data)->philo)
 		return (1);
@@ -55,19 +73,12 @@ int	data_init(t_data **data)
 			(*data)->philo[i].id_left = (*data)->philo_nb - 1;
 		else
 			(*data)->philo[i].id_left = i - 1;
-		if (pthread_mutex_init(&(*data)->philo[i].fork, NULL))
-			return (1);
-		if (pthread_mutex_init(&(*data)->philo[i].data_access, NULL))
+		if (pthread_mutex_init(&(*data)->philo[i].fork, NULL)
+			|| pthread_mutex_init(&(*data)->philo[i].data_access, NULL))
 			return (1);
 		i++;
 	}
-	i = 0;
-	while (i < (*data)->philo_nb)
-	{
-		(*data)->philo[i].fork_left = &(*data)->philo[(*data)->philo[i].id_left].fork;
-		i++;
-	}
-	(*data)->time_start = ft_timestamp() + 5000;
+	data_init_fork(data);
 	data_thread_init(data);
 	return (0);
 }
