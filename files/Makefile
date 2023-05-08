@@ -30,7 +30,7 @@ OBJS := ${SRCS:${SRC_DIR}/%.c=${OBJ_DIR}/%.o}
 CC          := clang
 CFLAGS      := -Wall -Wextra -Werror -g
 
-RM          := rm -f
+RM          := rm -rf
 MAKEFLAGS   += --no-print-directory
 DIR_DUP     = mkdir -p ${@D}
 
@@ -47,8 +47,8 @@ ${OBJ_DIR}/%.o: ${SRC_DIR}/%.c
 	${info OBJECT CREATED: $@}
 
 clean:
-	${RM} ${OBJS}
-	${info REMOVED OBJECTS: ${OBJS}}
+	${RM} ${OBJS} ${OBJ_DIR}
+	${info REMOVED OBJECTS: ${OBJS} ${OBJ_DIR}}
 
 fclean: clean
 	${RM} ${NAME}
