@@ -90,17 +90,20 @@ int	data_destroy(t_data **data)
 	i = 0;
 	while (i < (*data)->philo_nb)
 	{
-		pthread_join((*data)->philo[i].thread, NULL);
+		if (pthread_join((*data)->philo[i].thread, NULL))
+			return (1);
 		i++;
 	}
-	pthread_join((*data)->philo_checker, NULL);
+	if (pthread_join((*data)->philo_checker, NULL))
+		return (1);
 	i = 0;
 	while (i < (*data)->philo_nb)
 	{
-		pthread_mutex_destroy(&(*data)->philo[i].fork);
+		if (pthread_mutex_destroy(&(*data)->philo[i].fork))
 		i++;
 	}
-	pthread_mutex_destroy(&(*data)->data_access);
+	if (pthread_mutex_destroy(&(*data)->data_access))
+		return (1);
 	free((*data)->philo);
 	free(*data);
 	return (0);
