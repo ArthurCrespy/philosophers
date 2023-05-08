@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_utils.c                                         :+:      :+:    :+:   */
+/*   ft_time.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: acrespy <acrespy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/25 13:20:10 by acrespy           #+#    #+#             */
-/*   Updated: 2023/04/24 14:43:15 by acrespy          ###   ########.fr       */
+/*   Created: 2023/05/08 16:04:25 by acrespy           #+#    #+#             */
+/*   Updated: 2023/05/08 16:04:25 by acrespy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,39 +29,31 @@ void	ft_wait_start(t_data *data)
 		usleep(100);
 }
 
-void	ft_print_status(t_data *data, int id, char *status)
+void	ft_smart_sleep(t_data *data, long long time)
 {
-	long long	time;
+	long long	i;
 
-	time = ft_timestamp();
-	usleep(100);
-	pthread_mutex_lock(&data->data_access);
-	if (data->philo_alive)
-		printf("%lld %d %s\n", time - data->time_start, id, status);
-	pthread_mutex_unlock(&data->data_access);
-}
-
-int	ft_atoi(const char *str)
-{
-	int	i;
-	int	sign;
-	int	result;
-
-	i = 0;
-	sign = 1;
-	result = 0;
-	while ((str[i] >= 9 && str[i] <= 13) || str[i] == ' ')
-		i++;
-	if (str[i] == '-' || str[i] == '+')
+	i = ft_timestamp();
+	if (!data)
 	{
-		if (str[i] == '-')
-			sign *= -1;
-		i++;
+		while (1)
+		{
+			if ((ft_timestamp()) - i >= time)
+				break ;
+			usleep(10);
+		}
 	}
-	while (str[i] && (str[i] >= '0' && str[i] <= '9'))
+	while (1)
 	{
-		result *= 10;
-		result += (str[i++] - '0');
+		if ((ft_timestamp()) - i >= time)
+			break ;
+		pthread_mutex_lock(&data->data_access);
+		if (!data->philo_alive)
+		{
+			pthread_mutex_unlock(&data->data_access);
+			return ;
+		}
+		pthread_mutex_unlock(&data->data_access);
+		usleep(10);
 	}
-	return (result * sign);
 }
