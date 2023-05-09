@@ -100,6 +100,7 @@ int	data_destroy(t_data **data)
 	while (i < (*data)->philo_nb)
 	{
 		if (pthread_mutex_destroy(&(*data)->philo[i].fork))
+			return (1);
 		i++;
 	}
 	if (pthread_mutex_destroy(&(*data)->data_access))
