@@ -18,7 +18,7 @@ int	data_thread_init(t_data **data)
 
 	i = 1;
 	(*data)->philo_alive = 1;
-	(*data)->time_start = ft_timestamp() + ((*data)->philo_nb * 100);
+	(*data)->time_start = ft_timestamp() + ((*data)->philo_nb * 50);
 	while (i < (*data)->philo_nb && i % 2)
 	{
 		if (pthread_create(&(*data)->philo[i].thread, NULL, &philosopher,
@@ -60,9 +60,8 @@ int	data_init(t_data **data)
 
 	i = 0;
 	(*data)->philo = malloc(sizeof(t_philo) * (*data)->philo_nb);
-	if (!(*data)->philo)
-		return (1);
-	if (pthread_mutex_init(&(*data)->data_access, NULL))
+	if (!(*data)->philo || pthread_mutex_init(&(*data)->data_access, NULL)
+		|| pthread_mutex_init(&(*data)->print_access, NULL))
 		return (1);
 	while (i < (*data)->philo_nb)
 	{
