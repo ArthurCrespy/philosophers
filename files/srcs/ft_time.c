@@ -40,20 +40,14 @@ void	ft_smart_sleep(t_data *data, long long time)
 		{
 			if ((ft_timestamp()) - i >= time)
 				break ;
-			usleep(10);
+			usleep(200);
 		}
 	}
 	while (1)
 	{
 		if ((ft_timestamp()) - i >= time)
 			break ;
-		pthread_mutex_lock(&data->data_access);
-		if (!data->philo_alive)
-		{
-			pthread_mutex_unlock(&data->data_access);
-			return ;
-		}
-		pthread_mutex_unlock(&data->data_access);
-		usleep(10);
+		if (!ft_check_alive(data, 200))
+			break ;
 	}
 }
