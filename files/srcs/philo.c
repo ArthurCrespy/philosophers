@@ -12,6 +12,34 @@
 
 #include "../includes/philosophers.h"
 
+int	philo_forks(t_philo *philo)
+{
+	t_data	*data;
+
+	data = (t_data *)philo->data;
+	if (philo->id % 2 == 0)
+	{
+		pthread_mutex_lock(philo->fork_left);
+		ft_print_status(data, philo->id, "has taken a fork", 1);
+		if (philo->data->philo_nb == 1)
+		{
+			ft_smart_sleep(data, data->time_to_die + 10);
+			pthread_mutex_unlock(&philo->fork);
+			return (1);
+		}
+		pthread_mutex_lock(&philo->fork);
+		ft_print_status(data, philo->id, "has taken a fork", 1);
+	}
+	else
+	{
+		pthread_mutex_lock(&philo->fork);
+		ft_print_status(data, philo->id, "has taken a fork", 1);
+		pthread_mutex_lock(philo->fork_left);
+		ft_print_status(data, philo->id, "has taken a fork", 1);
+	}
+	return (0);
+}
+
 void	philo_sleep(t_philo *philo)
 {
 	t_data	*data;
@@ -39,16 +67,8 @@ void	philo_eat(t_philo *philo)
 	t_data	*data;
 
 	data = (t_data *)philo->data;
-	pthread_mutex_lock(&philo->fork);
-	ft_print_status(data, philo->id, "has taken a fork", 1);
-	if (philo->data->philo_nb == 1)
-	{
-		ft_smart_sleep(data, data->time_to_die + 10);
-		pthread_mutex_unlock(&philo->fork);
+	if (philo_forks(philo))
 		return ;
-	}
-	pthread_mutex_lock(philo->fork_left);
-	ft_print_status(data, philo->id, "has taken a fork", 1);
 	ft_print_status(data, philo->id, "is eating", 1);
 	pthread_mutex_lock(&philo->data_access);
 	philo->eat_last = ft_timestamp();
@@ -57,35 +77,6 @@ void	philo_eat(t_philo *philo)
 	ft_smart_sleep(data, data->time_to_eat);
 	pthread_mutex_unlock(&philo->fork);
 	pthread_mutex_unlock(philo->fork_left);
-}
-
-void	*philo_checker(void *arg)
-{
-	int			i;
-	t_data		*data;
-	long long	time;
-
-	data = (t_data *)arg;
-	ft_wait_start(data);
-	usleep(5000);
-	while (ft_check_alive(data, 10))
-	{
-		i = 0;
-		time = ft_timestamp();
-		while (i != data->philo_nb)
-		{
-			pthread_mutex_lock(&data->philo[i].data_access);
-			if (time - data->philo[i].eat_last >= data->time_to_die)
-			{
-				ft_set_dead(data, i);
-				pthread_mutex_unlock(&data->philo[i].data_access);
-				break ;
-			}
-			pthread_mutex_unlock(&data->philo[i].data_access);
-			i++;
-		}
-	}
-	return (NULL);
 }
 
 void	*philosopher(void *arg)
