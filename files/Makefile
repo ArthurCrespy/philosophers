@@ -21,6 +21,7 @@ SRCS := \
 			ft_utils.c \
 			main.c \
 			philo.c \
+			philo_checker.c \
 
 SRCS := ${SRCS:%=${SRC_DIR}/%}
 

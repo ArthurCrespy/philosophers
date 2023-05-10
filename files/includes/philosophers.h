@@ -60,18 +60,20 @@ int			data_init(t_data **data);
 int			data_parse(t_data **data, int argc, char **argv);
 int			data_destroy(t_data **data);
 
-/* ---------- PHILO --------- */
+/* ---------- PHILO -------- */
 void		philo_sleep(t_philo *philo);
 void		philo_think(t_philo *philo);
-void		*philo_checker(void *arg);
 void		*philosopher(void *arg);
+
+/* ------- PHILO-CHECK ----- */
+void		*philo_checker(void *arg);
 
 /* ---------- TIME --------- */
 long long	ft_timestamp(void);
 void		ft_wait_start(t_data *data);
 void		ft_smart_sleep(t_data *data, long long time);
 
-/* ---------- UTILS --------- */
+/* ---------- UTILS -------- */
 void		philo_sleep_think(t_philo *philo);
 void		ft_set_dead(t_data *data, int id);
 int			ft_check_alive(t_data *data, long long sleep);
