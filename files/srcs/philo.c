@@ -17,7 +17,7 @@ void	philo_sleep(t_philo *philo)
 	t_data	*data;
 
 	data = (t_data *)philo->data;
-	ft_print_status(data, philo->id, "is sleeping");
+	ft_print_status(data, philo->id, "is sleeping", 1);
 	ft_smart_sleep(data, data->time_to_sleep);
 }
 
@@ -26,10 +26,12 @@ void	philo_think(t_philo *philo)
 	t_data	*data;
 
 	data = (t_data *)philo->data;
-	if (data->time_to_eat - data->time_to_sleep <= 0)
+	if (data->time_to_die - ((data->time_to_eat * 2) + data->time_to_sleep)
+		<= 100)
 		return ;
-	ft_print_status(data, philo->id, "is thinking");
-	ft_smart_sleep(data, data->time_to_eat - data->time_to_sleep);
+	ft_print_status(data, philo->id, "is thinking", 1);
+	ft_smart_sleep(data, data->time_to_die - ((data->time_to_eat * 2)
+			+ data->time_to_sleep));
 }
 
 void	philo_eat(t_philo *philo)
@@ -38,7 +40,7 @@ void	philo_eat(t_philo *philo)
 
 	data = (t_data *)philo->data;
 	pthread_mutex_lock(&philo->fork);
-	ft_print_status(data, philo->id, "has taken a fork");
+	ft_print_status(data, philo->id, "has taken a fork", 1);
 	if (philo->data->philo_nb == 1)
 	{
 		ft_smart_sleep(data, data->time_to_die + 10);
@@ -46,8 +48,8 @@ void	philo_eat(t_philo *philo)
 		return ;
 	}
 	pthread_mutex_lock(philo->fork_left);
-	ft_print_status(data, philo->id, "has taken a fork");
-	ft_print_status(data, philo->id, "is eating");
+	ft_print_status(data, philo->id, "has taken a fork", 1);
+	ft_print_status(data, philo->id, "is eating", 1);
 	pthread_mutex_lock(&philo->data_access);
 	philo->eat_last = ft_timestamp();
 	philo->eat_nb++;
@@ -65,10 +67,10 @@ void	*philo_checker(void *arg)
 
 	data = (t_data *)arg;
 	ft_wait_start(data);
-	while (ft_check_alive(data))
+	usleep(5000);
+	while (ft_check_alive(data, 200))
 	{
 		i = 0;
-		usleep(100);
 		time = ft_timestamp();
 		while (i != data->philo_nb)
 		{
@@ -97,18 +99,19 @@ void	*philosopher(void *arg)
 	pthread_mutex_lock(&philo->data_access);
 	philo->eat_last = ft_timestamp();
 	pthread_mutex_unlock(&philo->data_access);
-	if (!(philo->id % 2) && ft_check_alive(data))
+	if ((philo->data->philo_nb % 2) && (philo->id == 1))
 	{
-		philo_sleep(philo);
-		philo_think(philo);
+		ft_print_status(data, philo->id, "is thinking", 1);
+		ft_smart_sleep(data, data->time_to_eat);
 	}
-	while (ft_check_alive(data))
+	if (!(philo->id % 2) && ft_check_alive(data, 0))
+		philo_sleep_think(philo);
+	while (ft_check_alive(data, 0))
 	{
 		philo_eat(philo);
+		philo_sleep_think(philo);
 		if (philo->eat_nb == data->eat_nb)
 			break ;
-		philo_sleep(philo);
-		philo_think(philo);
 	}
 	ft_set_dead(data, -1);
 	return (NULL);
