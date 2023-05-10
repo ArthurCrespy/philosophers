@@ -39,16 +39,23 @@ int	ft_check_alive(t_data *data)
 	return (1);
 }
 
-void	ft_print_status(t_data *data, int id, char *status)
+void	ft_print_status(t_data *data, int id, char *status, int check)
 {
 	long long	time;
 
-	time = ft_timestamp();
-	usleep(100);
-	pthread_mutex_lock(&data->data_access);
-	if (data->philo_alive)
-		printf("%lld %d %s\n", time - data->time_start, id, status);
-	pthread_mutex_unlock(&data->data_access);
+	time = ft_timestamp() - data->time_start;
+	if (ft_check_alive(data, 0) && check)
+	{
+		pthread_mutex_lock(&data->print_access);
+		printf("%lld %d %s\n", time, id, status);
+		pthread_mutex_unlock(&data->print_access);
+	}
+	else if (!check)
+	{
+		pthread_mutex_lock(&data->print_access);
+		printf("%lld %d %s\n", time, id, status);
+		pthread_mutex_unlock(&data->print_access);
+	}
 }
 
 int	ft_atoi(const char *str)
