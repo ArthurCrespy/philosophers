@@ -20,15 +20,16 @@ void	philo_sleep_think(t_philo *philo)
 
 void	ft_set_dead(t_data *data, int id)
 {
-	if (id >= 0)
-		ft_print_status(data, data->philo[id].id, "died");
 	pthread_mutex_lock(&data->data_access);
 	data->philo_alive = 0;
 	pthread_mutex_unlock(&data->data_access);
+	if (id >= 0)
+		ft_print_status(data, data->philo[id].id, "died", 0);
 }
 
-int	ft_check_alive(t_data *data)
+int	ft_check_alive(t_data *data, long long sleep)
 {
+	usleep(sleep);
 	pthread_mutex_lock(&data->data_access);
 	if (!data->philo_alive)
 	{
