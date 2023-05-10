@@ -68,7 +68,7 @@ void	*philo_checker(void *arg)
 	data = (t_data *)arg;
 	ft_wait_start(data);
 	usleep(5000);
-	while (ft_check_alive(data, 200))
+	while (ft_check_alive(data, 10))
 	{
 		i = 0;
 		time = ft_timestamp();

@@ -23,6 +23,7 @@ void	ft_set_dead(t_data *data, int id)
 	pthread_mutex_lock(&data->data_access);
 	data->philo_alive = 0;
 	pthread_mutex_unlock(&data->data_access);
+	usleep(100);
 	if (id >= 0)
 		ft_print_status(data, data->philo[id].id, "died", 0);
 }
