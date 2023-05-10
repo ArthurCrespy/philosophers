@@ -12,6 +12,12 @@
 
 #include "../includes/philosophers.h"
 
+void	philo_sleep_think(t_philo *philo)
+{
+	philo_sleep(philo);
+	philo_think(philo);
+}
+
 void	ft_set_dead(t_data *data, int id)
 {
 	if (id >= 0)
